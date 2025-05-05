@@ -31,20 +31,21 @@
         subscriptions: form.subscriptions.value
       };
 
-      fetch("https://script.google.com/macros/s/AKfycbxpspcqqd0G2M4Js8eOqrevciPiIRuvuDNuxLpX6uHZQXM7mhvY24XVc1DXd1TATCqdEQ/exec", {
-        method: "POST",
-        body: JSON.stringify(formData),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }).then(response => {
-        if (response.ok) {
-          document.getElementById("response").innerText = "Thank you! Your submission has been received.";
-          form.reset();
-        } else {
-          document.getElementById("response").innerText = "Something went wrong. Please try again.";
-        }
-      });
+    fetch("https://stackzero.vercel.app/api/submit", {
+  method: "POST",
+  body: JSON.stringify(formData),
+  headers: {
+    "Content-Type": "application/json"
+  }
+})
+.then(response => {
+  if (response.ok) {
+    document.getElementById("response").innerText = "Thank you! Your submission has been received.";
+    form.reset();
+  } else {
+    document.getElementById("response").innerText = "Something went wrong. Please try again.";
+  }
+});
     });
   </script>
 </body>
