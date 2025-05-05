@@ -20,9 +20,8 @@ export default function handler(req, res) {
   if (req.method === 'POST') {
     const { name, email, subscriptions } = req.body;
 
-    console.log({ name, email, subscriptions });
+    console.log('New submission:', { name, email, subscriptions });
 
-    // Заголовки CORS нужны и здесь
     if (allowedOrigins.includes(origin)) {
       res.setHeader('Access-Control-Allow-Origin', origin);
       res.setHeader('Vary', 'Origin');
