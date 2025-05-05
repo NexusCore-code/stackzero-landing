@@ -1,30 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StackZero — AI for optimizing your SaaS stack</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StackZero</title>
 </head>
-<body>
-    <header>
-        <h1>StackZero</h1>
-        <p>Your AI assistant for optimizing your business software stack</p>
-    </header>
-    <section class="form-section">
-        <h2>Get a free AI-generated savings report</h2>
-        <form id="stackForm">
-            <input type="text" name="name" placeholder="Your Name" required>
-            <input type="email" name="email" placeholder="Your Email" required>
-            <textarea name="subscriptions" placeholder="List your SaaS subscriptions..." required></textarea>
-            <button type="submit">Submit</button>
-        </form>
-        <p id="responseMessage"></p>
-    </section>
-    <footer>
-        <p>© 2025 NexusCore. Project StackZero.</p>
-        <p>Contact: Jetsetsport@mail.ru</p>
-    </footer>
-    <script src="script.js"></script>
+<body style="font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px;">
+  <h1>StackZero</h1>
+  <p>Submit your SaaS stack below. You'll receive a free AI-generated optimization report.</p>
+
+  <form id="stackzero-form">
+    <label>Name:</label><br/>
+    <input type="text" name="name" required style="width:100%; padding:8px; margin:5px 0;"><br/>
+    <label>Email:</label><br/>
+    <input type="email" name="email" required style="width:100%; padding:8px; margin:5px 0;"><br/>
+    <label>Subscriptions:</label><br/>
+    <textarea name="subscriptions" required placeholder="List your tools here..." style="width:100%; padding:8px; margin:5px 0; height:100px;"></textarea><br/>
+    <button type="submit" style="padding:10px 20px; background-color:#333; color:#fff; border:none;">Submit</button>
+  </form>
+
+  <p id="response" style="margin-top:20px;"></p>
+
+  <script>
+    document.getElementById("stackzero-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const formData = {
+        name: this.name.value,
+        email: this.email.value,
+        subscriptions: this.subscriptions.value
+      };
+
+      fetch("https://script.google.com/macros/s/AKfycbxpspcqqd0G2M4Js8eOqrevciPiIRuvuDNuxLpX6uHZQXM7mhvY24XVc1DXd1TATCqdEQ/exec", {
+        method: "POST",
+        body: JSON.stringify(formData),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then(response => {
+        if (response.ok) {
+          document.getElementById("response").innerText = "Thank you! Your submission has been received.";
+          document.getElementById("stackzero-form").reset();
+        } else {
+          document.getElementById("response").innerText = "Something went wrong. Please try again.";
+        }
+      });
+    });
+  </script>
 </body>
 </html>
