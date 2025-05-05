@@ -2,12 +2,13 @@ import { google } from 'googleapis';
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 const SHEET_ID = process.env.GOOGLE_SHEET_ID;
-const SHEET_NAME = 'Лист1';
+const SHEET_NAME = 'Лист1'; // Имя листа, можно поменять
 
 export default async function handler(req, res) {
+  // CORS заголовки
   const origin = req.headers.origin;
-
-  if (['https://www.stackzero.ai', 'https://stackzero.vercel.app'].includes(origin)) {
+  const allowedOrigins = ['https://www.stackzero.ai', 'https://stackzero.vercel.app'];
+  if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Vary', 'Origin');
   }
@@ -22,6 +23,7 @@ export default async function handler(req, res) {
     const { name, email, subscriptions } = req.body;
 
     try {
+      // Авторизация через сервисный аккаунт
       const auth = new google.auth.JWT(
         process.env.GOOGLE_CLIENT_EMAIL,
         null,
@@ -32,6 +34,7 @@ export default async function handler(req, res) {
       const sheets = google.sheets({ version: 'v4', auth });
       const timestamp = new Date().toISOString();
 
+      // Запись строки в таблицу
       await sheets.spreadsheets.values.append({
         spreadsheetId: SHEET_ID,
         range: `${SHEET_NAME}!A:D`,
@@ -42,12 +45,14 @@ export default async function handler(req, res) {
       });
 
       return res.status(200).json({ success: true });
-    } catch (err) {
-      console.error('Google Sheets Error:', err);
-      return res.status(500).json({ success: false, error: err.message });
+    } catch (error) {
+      // Ошибка авторизации или записи
+      console.error('Google Sheets Error:', error.message || error);
+      return res.status(500).json({ success: false, error: 'Sheet write failed' });
     }
   }
 
+  // Метод не поддерживается
   res.setHeader('Allow', ['POST', 'OPTIONS']);
   res.status(405).end(`Method ${req.method} Not Allowed`);
 }
