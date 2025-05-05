@@ -2,7 +2,7 @@ import { google } from 'googleapis';
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 const SHEET_ID = process.env.GOOGLE_SHEET_ID;
-const SHEET_NAME = 'Лист1'; // Имя листа в таблице
+const SHEET_NAME = 'Лист1';
 
 export default async function handler(req, res) {
   const origin = req.headers.origin;
@@ -30,7 +30,6 @@ export default async function handler(req, res) {
       );
 
       const sheets = google.sheets({ version: 'v4', auth });
-
       const timestamp = new Date().toISOString();
 
       await sheets.spreadsheets.values.append({
@@ -43,10 +42,10 @@ export default async function handler(req, res) {
       });
 
       return res.status(200).json({ success: true });
-    catch (err) {
-  console.error('Google Sheets Error:', err.response?.data || err.message || err);
-  return res.status(500).json({ success: false, error: err.message });
-}
+    } catch (err) {
+      console.error('Google Sheets Error:', err);
+      return res.status(500).json({ success: false, error: err.message });
+    }
   }
 
   res.setHeader('Allow', ['POST', 'OPTIONS']);
