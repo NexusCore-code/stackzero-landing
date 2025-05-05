@@ -43,10 +43,10 @@ export default async function handler(req, res) {
       });
 
       return res.status(200).json({ success: true });
-    } catch (err) {
-      console.error('Google Sheets Error:', err);
-      return res.status(500).json({ success: false, error: 'Sheet write failed' });
-    }
+    catch (err) {
+  console.error('Google Sheets Error:', err.response?.data || err.message || err);
+  return res.status(500).json({ success: false, error: err.message });
+}
   }
 
   res.setHeader('Allow', ['POST', 'OPTIONS']);
