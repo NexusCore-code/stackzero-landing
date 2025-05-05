@@ -8,6 +8,7 @@ export default function handler(req, res) {
 
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
   }
 
   if (req.method === 'OPTIONS') {
@@ -20,6 +21,12 @@ export default function handler(req, res) {
     const { name, email, subscriptions } = req.body;
 
     console.log({ name, email, subscriptions });
+
+    // Заголовки CORS нужны и здесь
+    if (allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Vary', 'Origin');
+    }
 
     return res.status(200).json({ success: true });
   }
