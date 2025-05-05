@@ -31,7 +31,7 @@
         subscriptions: form.subscriptions.value
       };
 
-    fetch("https://stackzero.vercel.app/api/submit", {
+    fetch("/api/submit", {
   method: "POST",
   body: JSON.stringify(formData),
   headers: {
