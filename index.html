@@ -24,11 +24,12 @@
   <script>
     document.getElementById("stackzero-form").addEventListener("submit", function(e) {
       e.preventDefault();
-      const formData = {
-        name: this.name.value,
-        email: this.email.value,
-        subscriptions: this.subscriptions.value
-      };
+    const form = document.getElementById("stackzero-form");
+const formData = {
+  name: form.name.value,
+  email: form.email.value,
+  subscriptions: form.subscriptions.value
+};
 
       fetch("https://script.google.com/macros/s/AKfycbxpspcqqd0G2M4Js8eOqrevciPiIRuvuDNuxLpX6uHZQXM7mhvY24XVc1DXd1TATCqdEQ/exec", {
         method: "POST",
