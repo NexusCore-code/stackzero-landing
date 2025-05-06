@@ -1,8 +1,15 @@
 {
-  "name": "stackzero",
+  "name": "stackzero-landing",
   "version": "1.0.0",
-  "type": "module",
-  "dependencies": {
-    "googleapis": "^118.0.0"
-  }
+  "description": "StackZero landing project with API support",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "keywords": [],
+  "author": "Elena Smirnova & Lux",
+  "license": "MIT"
 }
