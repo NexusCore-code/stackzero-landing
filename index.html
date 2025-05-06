@@ -3,7 +3,7 @@
   StackZero Landing Page
   Created by Elena Smirnova
   Purpose: Lead generation for StackZero SaaS Optimization Tool
-  Version: Initial launch, includes form, offer, anchors, preview + favicon
+  Includes: form, anchors, favicon, preview image
   Last updated: 2025-05-06
 -->
 <html lang="en">
@@ -12,12 +12,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>StackZero - Optimize SaaS</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/x-icon" href="favicon_sz.ico" />
-  <meta property="og:image" content="sz_preview.png" />
+  <link rel="icon" type="image/x-icon" href="favicon_sz.ico?v=2" />
+  <meta property="og:image" content="sz_preview.png?v=2" />
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
@@ -40,14 +38,8 @@
       padding: 3rem 1rem;
       max-width: 600px;
     }
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-    }
-    .subheading {
-      color: #ccc;
-      margin-bottom: 2rem;
-    }
+    h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .subheading { color: #ccc; margin-bottom: 2rem; }
     .form-box {
       background: #fff;
       color: #000;
@@ -77,14 +69,8 @@
       margin-top: 2rem;
       text-align: left;
     }
-    h2 {
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
-    p, ul, table {
-      color: #ccc;
-      font-size: 0.95rem;
-    }
+    h2 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    p, ul, table { color: #ccc; font-size: 0.95rem; }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -95,9 +81,7 @@
       padding: 0.5rem;
       text-align: left;
     }
-    th {
-      background-color: #111;
-    }
+    th { background-color: #111; }
   </style>
 </head>
 <body>
@@ -121,6 +105,7 @@
       </form>
       <p id="response" style="margin-top:1rem; font-size:0.9rem;"></p>
     </div>
+
     <section id="about">
       <h2>What is StackZero?</h2>
       <p>StackZero is an AI-powered service that helps businesses and individuals analyze and optimize their SaaS (Software-as-a-Service) expenses. Whether you're managing subscriptions across tools like Notion, Slack, Figma, Zoom, or others — we help you identify:</p>
@@ -131,6 +116,7 @@
       </ul>
       <p>You get a clean, personalized PDF report — perfect to share with finance, operations, or your team.</p>
     </section>
+
     <section>
       <h2>Free vs Paid Report</h2>
       <p>Here’s how the two options compare:</p>
@@ -143,40 +129,17 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Manual entry of subscriptions</td>
-            <td>Yes</td>
-            <td>Optional</td>
-          </tr>
-          <tr>
-            <td>Gmail integration</td>
-            <td>No</td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td>AI-powered expense analysis</td>
-            <td>Basic</td>
-            <td>Full with recommendations</td>
-          </tr>
-          <tr>
-            <td>Downloadable PDF report</td>
-            <td>Yes</td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td>History & trend analysis</td>
-            <td>No</td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td>Personalized recommendations</td>
-            <td>No</td>
-            <td>Yes</td>
-          </tr>
+          <tr><td>Manual entry of subscriptions</td><td>Yes</td><td>Optional</td></tr>
+          <tr><td>Gmail integration</td><td>No</td><td>Yes</td></tr>
+          <tr><td>AI-powered expense analysis</td><td>Basic</td><td>Full with recommendations</td></tr>
+          <tr><td>Downloadable PDF report</td><td>Yes</td><td>Yes</td></tr>
+          <tr><td>History & trend analysis</td><td>No</td><td>Yes</td></tr>
+          <tr><td>Personalized recommendations</td><td>No</td><td>Yes</td></tr>
         </tbody>
       </table>
     </section>
   </main>
+
   <script>
     document.getElementById("stackzero-form").addEventListener("submit", function(e) {
       e.preventDefault();
@@ -187,7 +150,7 @@
         subscriptions: form.subscriptions.value
       };
 
-      fetch("https://script.google.com/macros/s/AKfycbwFsiF4cDmRsdDO91bHrLg2Xp30waLPyX28WhlJUZxsShnjPB7-B-BLV9BlD5h1nxxlcw/exec", {
+      fetch("/api/submit", {
         method: "POST",
         body: JSON.stringify(formData),
         headers: {
