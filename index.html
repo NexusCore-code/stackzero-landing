@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <!-- 
   StackZero Landing Page
-  Created by Elena Smirnova 
+  Created by Elena Smirnova
   Purpose: Lead generation for StackZero SaaS Optimization Tool
-  Version: Initial launch, includes free/paid report explanation and form
+  Version: Initial launch, includes form, offer, and legal anchor
   Last updated: 2025-05-06
 -->
 <html lang="en">
@@ -13,6 +13,9 @@
   <title>StackZero - Optimize SaaS</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
@@ -50,13 +53,14 @@
       border-radius: 12px;
       margin-bottom: 3rem;
     }
-    input {
+    input, textarea {
       width: 100%;
       padding: 0.75rem;
       margin-bottom: 1rem;
       font-size: 1rem;
       border: 1px solid #ccc;
       border-radius: 8px;
+      font-family: 'Inter', sans-serif;
     }
     button {
       background-color: #2d4de0;
@@ -93,8 +97,9 @@
     <div class="form-box">
       <h3>Get a free subscription analysis report</h3>
       <form>
-        <input type="email" placeholder="Email address" required />
-        <input type="text" placeholder="Your business email or personal Gmail" required />
+        <input type="text" placeholder="Your name" required />
+        <input type="email" placeholder="Your email" required />
+        <textarea rows="4" placeholder="List your subscriptions (e.g., Notion, Figma, ChatGPT)" required></textarea>
         <button type="submit">Get your free report</button>
       </form>
     </div>
