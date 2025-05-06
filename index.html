@@ -111,12 +111,13 @@
     <div class="subheading">AI analysis of your subscriptions in 1 minute</div>
     <div class="form-box" id="contact">
       <h3>Get a free subscription analysis report</h3>
-      <form>
-        <input type="text" placeholder="Your name" required />
-        <input type="email" placeholder="Your email" required />
-        <textarea rows="4" placeholder="List your subscriptions (e.g., Notion, Figma, ChatGPT)" required></textarea>
+      <form id="stackzero-form">
+        <input type="text" name="name" placeholder="Your name" required />
+        <input type="email" name="email" placeholder="Your email" required />
+        <textarea name="subscriptions" rows="4" placeholder="List your subscriptions (e.g., Notion, Figma, ChatGPT)" required></textarea>
         <button type="submit">Get your free report</button>
       </form>
+      <p id="response" style="margin-top:1rem; font-size:0.9rem;"></p>
     </div>
     <section id="about">
       <h2>What is StackZero?</h2>
@@ -174,5 +175,32 @@
       </table>
     </section>
   </main>
+  <script>
+    document.getElementById("stackzero-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const form = document.getElementById("stackzero-form");
+      const formData = {
+        name: form.name.value,
+        email: form.email.value,
+        subscriptions: form.subscriptions.value
+      };
+
+      fetch("/api/submit", {
+        method: "POST",
+        body: JSON.stringify(formData),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then(response => {
+        if (response.ok) {
+          document.getElementById("response").innerText = "Thank you! Your submission has been received.";
+          form.reset();
+        } else {
+          document.getElementById("response").innerText = "Something went wrong. Please try again.";
+        }
+      });
+    });
+  </script>
 </body>
 </html>
