@@ -65,6 +65,27 @@
     </table>
   </section>
 
+  <section>
+    <h2>Why StackZero?</h2>
+    <p>StackZero is not just another subscription analyzer. It's a full-stack AI-powered service built for modern founders and teams who want clarity, savings, and speed.</p>
+    <ul>
+      <li><strong>Real value, instantly:</strong> AI-generated reports you can use or forward in minutes</li>
+      <li><strong>Not just Gmail:</strong> Manual input, automation, and integrations that scale</li>
+      <li><strong>Trust by design:</strong> Transparent, secure, and optimized for privacy</li>
+      <li><strong>B2B-ready:</strong> Agencies, startups and growing teams use our white-label engine</li>
+      <li><strong>Fast feedback loop:</strong> Built to evolve from your real use and input</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Who is behind StackZero?</h2>
+    <p>StackZero is an independent project founded by Elena Smirnova — a solo founder building with clarity, speed, and product obsession.</p>
+    <ul>
+      <li><strong>Elena Smirnova</strong> — founder, builder, visionary</li>
+    </ul>
+    <p>This is not a team of 50. It's one founder — focused, driven, and building something the world hasn't seen yet.</p>
+  </section>
+
   <script>
     document.getElementById("stackzero-form").addEventListener("submit", function(e) {
       e.preventDefault();
@@ -82,12 +103,12 @@
       })
       .then(res => res.json())
       .then(result => {
-        document.getElementById("response").innerText = "Спасибо! Ваша заявка принята.";
+        document.getElementById("response").innerText = "Thank you! Your submission has been received.";
         form.reset();
       })
       .catch(error => {
-        console.error("Ошибка:", error);
-        document.getElementById("response").innerText = "Ошибка. Попробуйте позже.";
+        console.error("Error:", error);
+        document.getElementById("response").innerText = "An error occurred. Please try again later.";
       });
     });
   </script>
