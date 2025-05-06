@@ -6,9 +6,10 @@ export default async function handler(req, res) {
   try {
     const { name, email, subscriptions } = req.body;
 
+    // Отправка в Google Apps Script Webhook
     const webhookUrl = "https://script.google.com/macros/s/AKfycbwFsiF4cDmRsdDO91bHrLg2Xp30waLPyX28WhlJUZxsShnjPB7-B-BLV9BlD5h1nxxlcw/exec";
 
-    const response = await fetch(webhookUrl, {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbwFsiF4cDmRsdDO91bHrLg2Xp30waLPyX28WhlJUZxsShnjPB7-B-BLV9BlD5h1nxxlcw/exec", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
