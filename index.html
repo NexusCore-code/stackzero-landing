@@ -1,52 +1,111 @@
 <!DOCTYPE html>
+<!-- 
+  StackZero Landing Page
+  Created by Elena Smirnova
+  Purpose: Lead generation for StackZero SaaS Optimization Tool
+  Version: Initial launch, includes free/paid report explanation and form
+  Last updated: 2025-05-06
+-->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>StackZero</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StackZero - Optimize SaaS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #000;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      justify-content: space-between;
+      padding: 1.5rem;
+      font-weight: 600;
+    }
+    main {
+      text-align: center;
+      padding: 3rem 1rem;
+      max-width: 600px;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .subheading {
+      color: #ccc;
+      margin-bottom: 2rem;
+    }
+    .form-box {
+      background: #fff;
+      color: #000;
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 3rem;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      background-color: #2d4de0;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    section {
+      margin-top: 2rem;
+    }
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    p {
+      color: #ccc;
+    }
+  </style>
 </head>
-<body style="font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px;">
-  <h1>StackZero</h1>
-  <p>Submit your SaaS stack below. You'll receive a free AI-generated optimization report.</p>
-
-  <form id="stackzero-form">
-    <label>Name:</label><br/>
-    <input type="text" name="name" required style="width:100%; padding:8px; margin:5px 0;"><br/>
-    <label>Email:</label><br/>
-    <input type="email" name="email" required style="width:100%; padding:8px; margin:5px 0;"><br/>
-    <label>Subscriptions:</label><br/>
-    <textarea name="subscriptions" required placeholder="List your tools here..." style="width:100%; padding:8px; margin:5px 0; height:100px;"></textarea><br/>
-    <button type="submit" style="padding:10px 20px; background-color:#333; color:#fff; border:none;">Submit</button>
-  </form>
-
-  <p id="response" style="margin-top:20px;"></p>
-
-  <script>
-    document.getElementById("stackzero-form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const form = document.getElementById("stackzero-form");
-      const formData = {
-        name: form.name.value,
-        email: form.email.value,
-        subscriptions: form.subscriptions.value
-      };
-
-    fetch("/api/submit", {
-  method: "POST",
-  body: JSON.stringify(formData),
-  headers: {
-    "Content-Type": "application/json"
-  }
-})
-.then(response => {
-  if (response.ok) {
-    document.getElementById("response").innerText = "Thank you! Your submission has been received.";
-    form.reset();
-  } else {
-    document.getElementById("response").innerText = "Something went wrong. Please try again.";
-  }
-});
-    });
-  </script>
+<body>
+  <header>
+    <div>StackZero</div>
+    <nav>
+      <a href="#" style="color: white; margin-right: 1rem; text-decoration: none;">About</a>
+      <a href="#" style="color: white; text-decoration: none;">Contact</a>
+    </nav>
+  </header>
+  <main>
+    <h1>Optimize Your SaaS Subscriptions</h1>
+    <div class="subheading">AI analysis of your subscriptions in 1 minute</div>
+    <div class="form-box">
+      <h3>Get a free subscription analysis report</h3>
+      <form>
+        <input type="email" placeholder="Email address" required />
+        <input type="text" placeholder="Your business email or personal Gmail" required />
+        <button type="submit">Get your free report</button>
+      </form>
+    </div>
+    <section>
+      <h2>What is StackZero?</h2>
+      <p>We help you identify unused and excessive SaaS expenses, so you can cut costs and save money.</p>
+    </section>
+    <section>
+      <h2>Free vs Paid Report</h2>
+      <p>Understand the differences between free and paid analysis</p>
+    </section>
+  </main>
 </body>
 </html>
