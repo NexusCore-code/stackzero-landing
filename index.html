@@ -73,13 +73,28 @@
     }
     section {
       margin-top: 2rem;
+      text-align: left;
     }
     h2 {
       font-size: 1.5rem;
       margin-bottom: 0.5rem;
     }
-    p {
+    p, ul, table {
       color: #ccc;
+      font-size: 0.95rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      border: 1px solid #444;
+      padding: 0.5rem;
+      text-align: left;
+    }
+    th {
+      background-color: #111;
     }
   </style>
 </head>
@@ -87,14 +102,14 @@
   <header>
     <div>StackZero</div>
     <nav>
-      <a href="#" style="color: white; margin-right: 1rem; text-decoration: none;">About</a>
-      <a href="#" style="color: white; text-decoration: none;">Contact</a>
+      <a href="#about" style="color: white; margin-right: 1rem; text-decoration: none;">About</a>
+      <a href="#contact" style="color: white; text-decoration: none;">Contact</a>
     </nav>
   </header>
   <main>
     <h1>Optimize Your SaaS Subscriptions</h1>
     <div class="subheading">AI analysis of your subscriptions in 1 minute</div>
-    <div class="form-box">
+    <div class="form-box" id="contact">
       <h3>Get a free subscription analysis report</h3>
       <form>
         <input type="text" placeholder="Your name" required />
@@ -103,13 +118,60 @@
         <button type="submit">Get your free report</button>
       </form>
     </div>
-    <section>
+    <section id="about">
       <h2>What is StackZero?</h2>
-      <p>We help you identify unused and excessive SaaS expenses, so you can cut costs and save money.</p>
+      <p>StackZero is an AI-powered service that helps businesses and individuals analyze and optimize their SaaS (Software-as-a-Service) expenses. Whether you're managing subscriptions across tools like Notion, Slack, Figma, Zoom, or others — we help you identify:</p>
+      <ul>
+        <li>Unused or forgotten subscriptions</li>
+        <li>Duplicate services across teams</li>
+        <li>Overpriced tools you could replace or downscale</li>
+      </ul>
+      <p>You get a clean, personalized PDF report — perfect to share with finance, operations, or your team.</p>
     </section>
     <section>
       <h2>Free vs Paid Report</h2>
-      <p>Understand the differences between free and paid analysis</p>
+      <p>Here’s how the two options compare:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Free Report</th>
+            <th>Paid Report</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Manual entry of subscriptions</td>
+            <td>Yes</td>
+            <td>Optional</td>
+          </tr>
+          <tr>
+            <td>Gmail integration</td>
+            <td>No</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>AI-powered expense analysis</td>
+            <td>Basic</td>
+            <td>Full with recommendations</td>
+          </tr>
+          <tr>
+            <td>Downloadable PDF report</td>
+            <td>Yes</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>History & trend analysis</td>
+            <td>No</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>Personalized recommendations</td>
+            <td>No</td>
+            <td>Yes</td>
+          </tr>
+        </tbody>
+      </table>
     </section>
   </main>
 </body>
