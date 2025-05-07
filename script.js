@@ -1,39 +1,26 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const form = document.getElementById("stackzero-form");
+document.getElementById("stackForm").addEventListener("submit", async function (e) {
+  e.preventDefault();
 
-  if (!form) {
-    console.error("Form not found");
-    return;
-  }
+  const name = document.querySelector('input[name="name"]').value;
+  const email = document.querySelector('input[name="email"]').value;
+  const subscriptions = document.querySelector('textarea[name="subscriptions"]').value;
 
-  form.addEventListener("submit", async function (e) {
-    e.preventDefault();
+  try {
+    const res = await fetch("/api/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, email, subscriptions }),
+    });
 
-    const data = {
-      name: form.name.value,
-      email: form.email.value,
-      subscriptions: form.subscriptions.value
-    };
-
-    try {
-      const res = await fetch("/api/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
-
-      if (res.ok) {
-        document.getElementById("response").innerText =
-          "Thank you! Your submission has been received. Your AI-powered report will be delivered to your email shortly.";
-        form.reset();
-      } else {
-        document.getElementById("response").innerText =
-          "Something went wrong. Please try again.";
-      }
-    } catch (error) {
-      console.error("Submission failed:", error);
-      document.getElementById("response").innerText =
-        "An unexpected error occurred. Please try again later.";
+    if (res.ok) {
+      document.getElementById("responseMessage").textContent = "Спасибо! Мы свяжемся с вами.";
+    } else {
+      document.getElementById("responseMessage").textContent = "Ошибка при отправке. Попробуйте снова.";
     }
-  });
+  } catch (err) {
+    document.getElementById("responseMessage").textContent = "Сетевая ошибка.";
+    console.error(err);
+  }
 });
