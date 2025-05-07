@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("StackZero script loaded");
-
   const form = document.getElementById("stackzero-form");
 
   if (!form) {
@@ -25,17 +23,8 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       if (res.ok) {
-        // Мы полностью игнорируем ответ сервера и показываем свой текст
         document.getElementById("response").innerText =
-          "Thank you! Your data was received successfully. You will get your AI-powered report by email shortly.";
-
-        // Запускаем генерацию AI-отчёта (в фоне)
-        await fetch("/api/generate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
-        });
-
+          "Thank you! Your submission has been received. Your AI-powered report will be delivered to your email shortly.";
         form.reset();
       } else {
         document.getElementById("response").innerText =
