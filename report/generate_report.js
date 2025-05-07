@@ -39,7 +39,7 @@ function generateSubscriptionsTable(subsText) {
 }
 
 function generateHtmlReport({ name, email, subscriptions }, aiText) {
-  const template = fs.readFileSync('./report_template.txt', 'utf8');
+  const template = fs.readFileSync('./report_template.html', 'utf8');
 
   const filled = template
     .replace('{{user_name}}', name)
