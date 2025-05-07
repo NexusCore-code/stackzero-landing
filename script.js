@@ -1,26 +1,40 @@
-document.getElementById("stackForm").addEventListener("submit", async function (e) {
+document.getElementById("stackzero-form").addEventListener("submit", async function (e) {
   e.preventDefault();
-
-  const name = document.querySelector('input[name="name"]').value;
-  const email = document.querySelector('input[name="email"]').value;
-  const subscriptions = document.querySelector('textarea[name="subscriptions"]').value;
+  const form = e.target;
+  const data = {
+    name: form.name.value,
+    email: form.email.value,
+    subscriptions: form.subscriptions.value
+  };
 
   try {
+    // Submit basic form data
     const res = await fetch("/api/submit", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, email, subscriptions }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
     });
 
     if (res.ok) {
-      document.getElementById("responseMessage").textContent = "Спасибо! Мы свяжемся с вами.";
+      // Show confirmation to user
+      document.getElementById("response").innerText =
+        "Thank you! Your submission has been received. Your AI-powered report will be delivered to your email shortly.";
+
+      // Trigger background generation (optional)
+      await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      form.reset();
     } else {
-      document.getElementById("responseMessage").textContent = "Ошибка при отправке. Попробуйте снова.";
+      document.getElementById("response").innerText =
+        "Something went wrong. Please try again.";
     }
-  } catch (err) {
-    document.getElementById("responseMessage").textContent = "Сетевая ошибка.";
-    console.error(err);
+  } catch (error) {
+    console.error("Submission failed:", error);
+    document.getElementById("response").innerText =
+      "An unexpected error occurred. Please try again later.";
   }
 });
