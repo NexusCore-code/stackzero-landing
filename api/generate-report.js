@@ -1,89 +1,37 @@
-import fs from 'fs';
-import path from 'path';
-import puppeteer from 'puppeteer';
-import { Configuration, OpenAIApi } from 'openai';
-
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
+import { OpenAI } from "openai";
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Only POST allowed' });
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { name, email, subscriptions } = req.body;
+  const openaiKey = process.env.OPENAI_API_KEY;
 
-  if (!name || !email || !subscriptions) {
-    return res.status(400).json({ error: 'Missing required fields' });
+  if (!openaiKey) {
+    // Development fallback when OpenAI key is missing
+    return res.status(200).json({
+      report: "Example report: You can cancel subscriptions like Zoom and Dropbox — they haven't been used for over 2 months.",
+      warning: "OPENAI_API_KEY is not set. Returning a test version of the report."
+    });
   }
 
   try {
-    console.log("[StackZero] Generating AI analysis...");
-    const prompt = `
-You are an expert in SaaS cost optimization.
+    const openai = new OpenAI({ apiKey: openaiKey });
 
-Analyze the following list of software subscriptions and provide:
-1. A short overview of spending behavior
-2. Specific savings opportunities
-3. Downsizing or switching options
-4. Optimization tips
+    const { subscriptions } = req.body;
 
-Subscriptions:
-${subscriptions}
+    const prompt = `Analyze these subscriptions and suggest which ones could be canceled or replaced: ${subscriptions.join(', ')}`;
 
-Keep it under 300 words. Clear and professional tone.
-    `;
-
-    const chatResponse = await openai.createChatCompletion({
-      model: 'gpt-4',
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0.7,
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages: [{ role: "user", content: prompt }],
     });
 
-    const aiText = chatResponse.data.choices[0].message.content;
-    console.log("[StackZero] AI analysis complete.");
+    const report = completion.choices[0]?.message?.content || "Report generation failed.";
 
-    const templatePath = path.resolve('./report_template.html');
-
-    if (!fs.existsSync(templatePath)) {
-      throw new Error("Template file not found at: " + templatePath);
-    }
-
-    const template = fs.readFileSync(templatePath, 'utf8');
-
-    const subsTable = subscriptions.split(',').map((s) => {
-      const [service, price] = s.trim().split(' ($');
-      return `<tr><td>${service}</td><td>$${price?.replace('/mo)', '')}</td><td>Monthly</td><td></td></tr>`;
-    }).join('\n');
-
-    const recList = aiText.split('\n').slice(-4).map(line => `<li>${line}</li>`).join('\n');
-
-    const htmlContent = template
-      .replace('{{user_name}}', name)
-      .replace('{{report_date}}', new Date().toLocaleDateString())
-      .replace('{{subscription_count}}', subscriptions.split(',').length)
-      .replace('{{subscriptions_table}}', subsTable)
-      .replace('{{ai_analysis}}', aiText)
-      .replace('{{recommendations_list}}', recList);
-
-    const browser = await puppeteer.launch({
-      headless: 'new',
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
-
-    const page = await browser.newPage();
-    await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
-
-    const pdfBuffer = await page.pdf({ format: 'A4' });
-    await browser.close();
-
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'attachment; filename=StackZero_Report.pdf');
-    res.send(pdfBuffer);
-  } catch (err) {
-    console.error("[StackZero] Report generation failed:", err);
-    res.status(500).json({ error: 'Failed to generate report', details: err.message });
+    res.status(200).json({ report });
+  } catch (error) {
+    console.error("OpenAI Error:", error);
+    res.status(500).json({ error: "Failed to generate report." });
   }
 }
