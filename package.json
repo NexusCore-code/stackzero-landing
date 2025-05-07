@@ -8,7 +8,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "googleapis": "^105.0.0"
+    "googleapis": "^105.0.0",
+    "puppeteer": "^21.3.8"
   },
   "devDependencies": {},
   "keywords": [],
