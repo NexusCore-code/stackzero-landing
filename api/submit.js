@@ -1,9 +1,8 @@
-
 import { google } from 'googleapis';
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 const SHEET_ID = process.env.GOOGLE_SHEET_ID;
-const SHEET_NAME = 'Form Data';
+const SHEET_NAME = 'Form Data'; // обновлено!
 
 export default async function handler(req, res) {
   const origin = req.headers.origin;
@@ -26,7 +25,7 @@ export default async function handler(req, res) {
       const auth = new google.auth.JWT(
         process.env.GOOGLE_CLIENT_EMAIL,
         null,
-        process.env.GOOGLE_PRIVATE_KEY.replace(/\n/g, '\n'),
+        process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
         SCOPES
       );
 
