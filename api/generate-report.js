@@ -1,41 +1,52 @@
-import { OpenAI } from "openai";
+import puppeteer from "puppeteer";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const openaiKey = process.env.OPENAI_API_KEY;
+  const { report } = req.body;
 
-  if (!openaiKey) {
-    return res.status(200).json({
-      report: "Example report: You can cancel subscriptions like Zoom and Dropbox — they haven't been used for over 2 months.",
-      warning: "OPENAI_API_KEY is not set. Returning a test version of the report."
-    });
+  if (!report) {
+    return res.status(400).json({ error: "No report content provided" });
   }
 
+  const html = `
+    <html>
+      <head>
+        <meta charset="utf-8" />
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+          }
+          h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>StackZero AI Report</h1>
+        <div>${report.replace(/\n/g, "<br/>")}</div>
+      </body>
+    </html>
+  `;
+
   try {
-    const openai = new OpenAI({ apiKey: openaiKey });
+    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
+    const page = await browser.newPage();
+    await page.setContent(html, { waitUntil: 'networkidle0' });
+    const pdf = await page.pdf({ format: 'A4' });
+    await browser.close();
 
-    let { subscriptions } = req.body;
-
-    // Ensure it's a string for the prompt
-    const subscriptionsList = Array.isArray(subscriptions)
-      ? subscriptions.join(", ")
-      : String(subscriptions || "");
-
-    const prompt = `Analyze the following subscriptions and suggest which ones can be canceled or replaced to optimize costs: ${subscriptionsList}`;
-
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4-turbo",
-      messages: [{ role: "user", content: prompt }],
-    });
-
-    const report = completion.choices[0]?.message?.content || "Failed to generate report.";
-
-    res.status(200).json({ report });
-  } catch (error) {
-    console.error("OpenAI Error:", error);
-    res.status(500).json({ error: "Failed to generate report." });
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=stackzero-report.pdf');
+    res.send(pdf);
+  } catch (err) {
+    console.error("PDF generation error:", err);
+    res.status(500).json({ error: "Failed to generate PDF." });
   }
 }
