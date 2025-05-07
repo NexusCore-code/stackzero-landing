@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
+  console.log("StackZero script loaded");
+
   const form = document.getElementById("stackzero-form");
 
   if (!form) {
