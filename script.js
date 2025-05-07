@@ -1,6 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("stackzero-form");
 
+  if (!form) {
+    console.error("Form not found");
+    return;
+  }
+
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
 
