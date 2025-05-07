@@ -10,30 +10,75 @@ document.addEventListener("DOMContentLoaded", function () {
     e.preventDefault();
 
     const data = {
-      name: form.name.value,
-      email: form.email.value,
-      subscriptions: form.subscriptions.value
+      name: form.name.value.trim(),
+      email: form.email.value.trim(),
+      subscriptions: form.subscriptions.value.trim()
     };
 
+    const responseEl = document.getElementById("response");
+
     try {
+      // 1. Отправка данных на /api/submit
       const res = await fetch("/api/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
       });
 
-      if (res.ok) {
-        document.getElementById("response").innerText =
-          "Thank you! Your submission has been received. Your AI-powered report will be delivered to your email shortly.";
-        form.reset();
-      } else {
-        document.getElementById("response").innerText =
-          "Something went wrong. Please try again.";
+      if (!res.ok) {
+        responseEl.innerText = "Something went wrong. Please try again.";
+        return;
       }
+
+      responseEl.innerText = "Thank you! Your submission has been received.";
+
+      // 2. Показ модалки и генерация отчёта
+      const modal = document.getElementById("report-modal");
+      const progressBar = document.getElementById("progress-bar");
+      const preview = document.getElementById("report-preview");
+      const pdfFrame = document.getElementById("pdf-frame");
+      const downloadLink = document.getElementById("download-link");
+
+      modal.style.display = "flex";
+      preview.style.display = "none";
+      progressBar.style.width = "0%";
+
+      let progress = 0;
+      const interval = setInterval(() => {
+        if (progress < 95) {
+          progress += Math.random() * 5;
+          progressBar.style.width = `${Math.min(progress, 95)}%`;
+        }
+      }, 300);
+
+      const reportRes = await fetch("/api/generate-report", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      if (!reportRes.ok) {
+        clearInterval(interval);
+        modal.innerHTML = "<p style='color:red;'>Failed to generate report. Please try again later.</p>";
+        return;
+      }
+
+      const blob = await reportRes.blob();
+      const pdfUrl = URL.createObjectURL(blob);
+
+      clearInterval(interval);
+      progressBar.style.width = "100%";
+
+      setTimeout(() => {
+        preview.style.display = "block";
+        pdfFrame.src = pdfUrl;
+        downloadLink.href = pdfUrl;
+      }, 800);
+
+      form.reset();
     } catch (error) {
       console.error("Submission failed:", error);
-      document.getElementById("response").innerText =
-        "An unexpected error occurred. Please try again later.";
+      responseEl.innerText = "An unexpected error occurred. Please try again later.";
     }
   });
 });
