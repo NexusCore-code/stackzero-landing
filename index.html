@@ -1,9 +1,3 @@
-<!--
-  StackZero by Elena Smirnova
-  Founder: elena@stackzero.ai
-  Version: Stable / Final Restored
--->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,7 +12,7 @@
     input, textarea { width: 100%; padding: 0.75rem; margin: 0.5rem 0; font-size: 1rem; border-radius: 8px; border: 1px solid #ccc; }
     button { background: #2d4de0; color: #fff; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer; }
     #response { margin-top: 1rem; font-size: 0.95rem; color: green; }
-    section { max-width: 800px; margin: 4rem auto; text-align: left; }
+    section { max-width: 600px; margin: 4rem auto; text-align: left; }
     table { width: 100%; border-collapse: collapse; margin-top: 1rem; color: #fff; font-size: 0.95rem; }
     th, td { border: 1px solid #444; padding: 0.5rem; text-align: left; }
     th { background-color: #111; }
@@ -71,27 +65,31 @@
     </table>
   </section>
 
-  <section>
-    <h2>Why StackZero?</h2>
-    <p>StackZero is not just another subscription analyzer. It's a full-stack AI-powered service built for modern founders and teams who want clarity, savings, and speed.</p>
-    <ul>
-      <li><strong>Real value, instantly:</strong> AI-generated reports you can use or forward in minutes</li>
-      <li><strong>Not just Gmail:</strong> Manual input, automation, and integrations that scale</li>
-      <li><strong>Trust by design:</strong> Transparent, secure, and optimized for privacy</li>
-      <li><strong>B2B-ready:</strong> Agencies, startups and growing teams use our white-label engine</li>
-      <li><strong>Fast feedback loop:</strong> Built to evolve from your real use and input</li>
-    </ul>
-  </section>
+  <script>
+    document.getElementById("stackzero-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const data = {
+        name: form.name.value,
+        email: form.email.value,
+        subscriptions: form.subscriptions.value
+      };
 
-  <section>
-    <h2>Who is behind StackZero?</h2>
-    <p>StackZero is an independent project founded by a solo founder building with clarity, speed, and product obsession.</p>
-    <ul>
-      <li><strong>Elena S.</strong> — founder, builder, visionary</li>
-    </ul>
-    <p>This is not a team of 50. It's one founder — focused, driven, and building something the world hasn't seen yet.</p>
-  </section>
-
-  <script src="script.js?v=1.6"></script>
+      fetch("/api/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(result => {
+        document.getElementById("response").innerText = "Спасибо! Ваша заявка принята.";
+        form.reset();
+      })
+      .catch(error => {
+        console.error("Ошибка:", error);
+        document.getElementById("response").innerText = "Ошибка. Попробуйте позже.";
+      });
+    });
+  </script>
 </body>
 </html>
