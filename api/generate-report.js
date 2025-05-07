@@ -23,7 +23,7 @@ export default async function handler(req, res) {
     const prompt = `Analyze these subscriptions and suggest which ones could be canceled or replaced: ${subscriptions.join(', ')}`;
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4",
+      model: "gpt-4-turbo",
       messages: [{ role: "user", content: prompt }],
     });
 
