@@ -7,7 +7,9 @@
     "build": "vite build",
     "preview": "vite preview"
   },
-  "dependencies": {},
+  "dependencies": {
+    "googleapis": "^105.0.0"
+  },
   "devDependencies": {},
   "keywords": [],
   "author": "Elena Smirnova & Lux",
