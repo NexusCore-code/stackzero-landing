@@ -1,40 +1,39 @@
-document.getElementById("stackzero-form").addEventListener("submit", async function (e) {
-  e.preventDefault();
-  const form = e.target;
-  const data = {
-    name: form.name.value,
-    email: form.email.value,
-    subscriptions: form.subscriptions.value
-  };
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("stackzero-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = {
+      name: form.name.value,
+      email: form.email.value,
+      subscriptions: form.subscriptions.value
+    };
 
-  try {
-    // Submit basic form data
-    const res = await fetch("/api/submit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    });
-
-    if (res.ok) {
-      // Show confirmation to user
-      document.getElementById("response").innerText =
-        "Thank you! Your submission has been received. Your AI-powered report will be delivered to your email shortly.";
-
-      // Trigger background generation (optional)
-      await fetch("/api/generate", {
+    try {
+      const res = await fetch("/api/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
       });
 
-      form.reset();
-    } else {
+      if (res.ok) {
+        document.getElementById("response").innerText =
+          "Thank you! Your submission has been received. Your AI-powered report will be delivered to your email shortly.";
+
+        await fetch("/api/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        form.reset();
+      } else {
+        document.getElementById("response").innerText =
+          "Something went wrong. Please try again.";
+      }
+    } catch (error) {
+      console.error("Submission failed:", error);
       document.getElementById("response").innerText =
-        "Something went wrong. Please try again.";
+        "An unexpected error occurred. Please try again later.";
     }
-  } catch (error) {
-    console.error("Submission failed:", error);
-    document.getElementById("response").innerText =
-      "An unexpected error occurred. Please try again later.";
-  }
+  });
 });
