@@ -1,7 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
-  document.getElementById("stackzero-form").addEventListener("submit", async function (e) {
+  const form = document.getElementById("stackzero-form");
+
+  form.addEventListener("submit", async function (e) {
     e.preventDefault();
-    const form = e.target;
+
     const data = {
       name: form.name.value,
       email: form.email.value,
