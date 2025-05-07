@@ -1,4 +1,3 @@
-
 import fs from 'fs';
 import path from 'path';
 import puppeteer from 'puppeteer';
@@ -21,6 +20,7 @@ export default async function handler(req, res) {
   }
 
   try {
+    console.log("[StackZero] Generating AI analysis...");
     const prompt = `
 You are an expert in SaaS cost optimization.
 
@@ -43,8 +43,14 @@ Keep it under 300 words. Clear and professional tone.
     });
 
     const aiText = chatResponse.data.choices[0].message.content;
+    console.log("[StackZero] AI analysis complete.");
 
     const templatePath = path.resolve('./report_template.html');
+
+    if (!fs.existsSync(templatePath)) {
+      throw new Error("Template file not found at: " + templatePath);
+    }
+
     const template = fs.readFileSync(templatePath, 'utf8');
 
     const subsTable = subscriptions.split(',').map((s) => {
@@ -62,7 +68,11 @@ Keep it under 300 words. Clear and professional tone.
       .replace('{{ai_analysis}}', aiText)
       .replace('{{recommendations_list}}', recList);
 
-    const browser = await puppeteer.launch({ headless: 'new' });
+    const browser = await puppeteer.launch({
+      headless: 'new',
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
+
     const page = await browser.newPage();
     await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
 
@@ -72,9 +82,8 @@ Keep it under 300 words. Clear and professional tone.
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', 'attachment; filename=StackZero_Report.pdf');
     res.send(pdfBuffer);
-
   } catch (err) {
-    console.error('Error generating report:', err);
-    res.status(500).json({ error: 'Failed to generate report' });
+    console.error("[StackZero] Report generation failed:", err);
+    res.status(500).json({ error: 'Failed to generate report', details: err.message });
   }
 }
