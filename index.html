@@ -34,47 +34,13 @@
 
   <section>
     <h2>What is StackZero?</h2>
-    <p>StackZero is an AI-powered service that helps businesses and individuals analyze and optimize their SaaS (Software-as-a-Service) expenses. Whether you're managing subscriptions across tools like Notion, Slack, Figma, Zoom, or others — we help you identify:</p>
+    <p>StackZero is an AI-powered service that helps businesses and individuals analyze and optimize their SaaS (Software-as-a-Service) expenses.</p>
     <ul>
       <li>Unused or forgotten subscriptions</li>
       <li>Duplicate services across teams</li>
       <li>Overpriced tools you could replace or downscale</li>
     </ul>
     <p>You get a clean, personalized PDF report — perfect to share with finance, operations, or your team.</p>
-  </section>
-
-  <section>
-    <h2>Free vs Paid Report</h2>
-    <p>Here's how the two options compare:</p>
-    <table>
-      <thead>
-        <tr>
-          <th>Feature</th>
-          <th>Free Report</th>
-          <th>Paid Report</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>Manual entry of subscriptions</td><td>Yes</td><td>Optional</td></tr>
-        <tr><td>Gmail integration</td><td>No</td><td>Yes</td></tr>
-        <tr><td>AI-powered expense analysis</td><td>Basic</td><td>Full with recommendations</td></tr>
-        <tr><td>Downloadable PDF report</td><td>Yes</td><td>Yes</td></tr>
-        <tr><td>History & trend analysis</td><td>No</td><td>Yes</td></tr>
-        <tr><td>Personalized recommendations</td><td>No</td><td>Yes</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section>
-    <h2>Why StackZero?</h2>
-    <p>StackZero is not just another subscription analyzer. It's a full-stack AI-powered service built for modern founders and teams who want clarity, savings, and speed.</p>
-    <ul>
-      <li><strong>Real value, instantly:</strong> AI-generated reports you can use or forward in minutes</li>
-      <li><strong>Not just Gmail:</strong> Manual input, automation, and integrations that scale</li>
-      <li><strong>Trust by design:</strong> Transparent, secure, and optimized for privacy</li>
-      <li><strong>B2B-ready:</strong> Agencies, startups and growing teams use our white-label engine</li>
-      <li><strong>Fast feedback loop:</strong> Built to evolve from your real use and input</li>
-    </ul>
   </section>
 
   <section>
@@ -86,31 +52,6 @@
     <p>This is not a team of 50. It's one founder — focused, driven, and building something the world hasn't seen yet.</p>
   </section>
 
-  <script>
-    document.getElementById("stackzero-form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const form = e.target;
-      const data = {
-        name: form.name.value,
-        email: form.email.value,
-        subscriptions: form.subscriptions.value
-      };
-
-      fetch("/api/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      })
-      .then(res => res.json())
-      .then(result => {
-        document.getElementById("response").innerText = "Thank you! Your submission has been received.";
-        form.reset();
-      })
-      .catch(error => {
-        console.error("Error:", error);
-        document.getElementById("response").innerText = "An error occurred. Please try again later.";
-      });
-    });
-  </script>
+  <script src="script.js?v=1.2"></script>
 </body>
 </html>
