@@ -65,20 +65,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const reportData = await reportRes.json();
 
-      const pdfRes = await fetch("/api/generate-pdf", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ report: reportData.report })
-      });
+ // Генерация PDF в браузере из AI-отчёта
+const pdfText = reportData.report;
 
-      if (!pdfRes.ok) {
-        clearInterval(interval);
-        modal.innerHTML = "<p style='color:red;'>PDF generation failed. Please try again later.</p>";
-        return;
-      }
+const pdfContent = document.getElementById("pdf-content");
+const pdfTextDiv = document.getElementById("pdf-text");
+pdfTextDiv.textContent = pdfText;
+pdfContent.style.display = "block";
 
-      const pdfBlob = await pdfRes.blob();
-      const pdfUrl = URL.createObjectURL(pdfBlob);
+const opt = {
+  margin: 0.5,
+  filename: "stackzero-report.pdf",
+  image: { type: "jpeg", quality: 0.98 },
+  html2canvas: { scale: 2 },
+  jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
+};
+
+html2pdf().set(opt).from(pdfContent).outputPdf("blob").then((pdfBlob) => {
+  const pdfUrl = URL.createObjectURL(pdfBlob);
+
+  clearInterval(interval);
+  progressBar.style.width = "100%";
+
+  setTimeout(() => {
+    preview.style.display = "block";
+    pdfFrame.src = pdfUrl;
+    downloadLink.href = pdfUrl;
+    pdfContent.style.display = "none";
+  }, 800);
+});
 
       clearInterval(interval);
       progressBar.style.width = "100%";
