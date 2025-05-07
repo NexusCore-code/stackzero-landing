@@ -8,7 +8,6 @@ export default async function handler(req, res) {
   const openaiKey = process.env.OPENAI_API_KEY;
 
   if (!openaiKey) {
-    // Development fallback when OpenAI key is missing
     return res.status(200).json({
       report: "Example report: You can cancel subscriptions like Zoom and Dropbox — they haven't been used for over 2 months.",
       warning: "OPENAI_API_KEY is not set. Returning a test version of the report."
@@ -18,16 +17,21 @@ export default async function handler(req, res) {
   try {
     const openai = new OpenAI({ apiKey: openaiKey });
 
-    const { subscriptions } = req.body;
+    let { subscriptions } = req.body;
 
-    const prompt = `Analyze these subscriptions and suggest which ones could be canceled or replaced: ${subscriptions.join(', ')}`;
+    // Ensure it's a string for the prompt
+    const subscriptionsList = Array.isArray(subscriptions)
+      ? subscriptions.join(", ")
+      : String(subscriptions || "");
+
+    const prompt = `Analyze the following subscriptions and suggest which ones can be canceled or replaced to optimize costs: ${subscriptionsList}`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4-turbo",
       messages: [{ role: "user", content: prompt }],
     });
 
-    const report = completion.choices[0]?.message?.content || "Report generation failed.";
+    const report = completion.choices[0]?.message?.content || "Failed to generate report.";
 
     res.status(200).json({ report });
   } catch (error) {
