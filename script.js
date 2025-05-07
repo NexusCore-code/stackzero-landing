@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       responseEl.innerText = "Thank you! Your submission has been received.";
 
-      // 2. Показ модалки и генерация отчёта
+      // 2. Показываем модалку и генерируем отчёт
       const modal = document.getElementById("report-modal");
       const progressBar = document.getElementById("progress-bar");
       const preview = document.getElementById("report-preview");
@@ -63,8 +63,22 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      const blob = await reportRes.blob();
-      const pdfUrl = URL.createObjectURL(blob);
+      const reportData = await reportRes.json();
+
+      const pdfRes = await fetch("/api/generate-pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ report: reportData.report })
+      });
+
+      if (!pdfRes.ok) {
+        clearInterval(interval);
+        modal.innerHTML = "<p style='color:red;'>PDF generation failed. Please try again later.</p>";
+        return;
+      }
+
+      const pdfBlob = await pdfRes.blob();
+      const pdfUrl = URL.createObjectURL(pdfBlob);
 
       clearInterval(interval);
       progressBar.style.width = "100%";
@@ -77,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       form.reset();
     } catch (error) {
-      console.error("Submission failed:", error);
+      console.error("Submission failed", error);
       responseEl.innerText = "An unexpected error occurred. Please try again later.";
     }
   });
