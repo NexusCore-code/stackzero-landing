@@ -5,6 +5,7 @@ import ejs from 'ejs';
 import OpenAI from 'openai';
 import chromium from '@sparticuz/chromium';
 import puppeteer from 'puppeteer-core';
+import { sendStackZeroEmail } from '../lib/send-email.js'; // ✅ Email handler
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 const SHEET_ID = process.env.GOOGLE_SHEET_ID;
@@ -20,19 +21,17 @@ export default async function handler(req, res) {
   const reportType = 'free'; // or 'paid'
 
   try {
-    // Validate required environment variables
     if (!process.env.GOOGLE_CLIENT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY || !SHEET_ID) {
       throw new Error('Missing Google credentials');
     }
 
-    // Save form data to Google Sheets
+    // Save submission to Google Sheets
     const auth = new google.auth.JWT(
       process.env.GOOGLE_CLIENT_EMAIL,
       null,
       process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
       SCOPES
     );
-
     const sheets = google.sheets({ version: 'v4', auth });
     const timestamp = new Date().toISOString();
 
@@ -45,7 +44,7 @@ export default async function handler(req, res) {
       },
     });
 
-    // Prepare subscriptions list and GPT prompt
+    // Generate content using GPT
     const subs = subscriptions.split(',').map(s => s.trim());
     const prompt = `Generate a short SaaS optimization summary for the following tools: ${subs.join(', ')}.`;
 
@@ -53,10 +52,9 @@ export default async function handler(req, res) {
       model: 'gpt-4o',
       messages: [{ role: 'user', content: prompt }],
     });
-
     const recommendations = gpt.choices[0].message.content;
 
-    // Render report template with data
+    // Render HTML report from EJS template
     const templatePath = path.join(process.cwd(), 'report_template.html');
     const template = await fs.readFile(templatePath, 'utf8');
 
@@ -122,21 +120,24 @@ export default async function handler(req, res) {
       ],
     });
 
-    // Generate PDF using Puppeteer and return as response
+    // Generate PDF
     const browser = await puppeteer.launch({
       args: chromium.args,
       executablePath: await chromium.executablePath(),
       headless: chromium.headless,
     });
-
     const page = await browser.newPage();
     await page.setContent(html, { waitUntil: 'networkidle0' });
     const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
     await browser.close();
 
+    // Send PDF in response
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', 'inline; filename=stackzero_report.pdf');
     res.send(pdfBuffer);
+
+    // Send email with attached report (non-blocking)
+    sendStackZeroEmail({ name, email, reportType, pdfBuffer });
 
   } catch (error) {
     console.error('[SUBMIT ERROR]', error);
