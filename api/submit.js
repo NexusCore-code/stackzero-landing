@@ -1,10 +1,12 @@
+// FINAL FIXED VERSION FOR VERCEL (CommonJS + Puppeteer Core + Chromium)
+
 const fs = require('fs');
 const path = require('path');
-const chromium = require('@sparticuz/chromium');
 const puppeteer = require('puppeteer-core');
-const OpenAI = require('openai'); // заменено!
+const chromium = require('@sparticuz/chromium');
+const OpenAI = require('openai');
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY }); // заменено!
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 function generateSubscriptionsTable(subsText) {
   const lines = subsText.split(',').map(s => s.trim());
@@ -40,12 +42,11 @@ Analyze the following list of software subscriptions and provide:
 Subscriptions:
 ${subsText}
 
-Keep it under 300 words. Clear and professional tone.
-  `;
+Keep it under 300 words. Clear and professional tone.`;
 
   const response = await openai.chat.completions.create({
-    model: "gpt-4",
-    messages: [{ role: "user", content: prompt }],
+    model: 'gpt-4',
+    messages: [{ role: 'user', content: prompt }],
     temperature: 0.7,
   });
 
