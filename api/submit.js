@@ -2,12 +2,9 @@ const fs = require('fs');
 const path = require('path');
 const chromium = require('@sparticuz/chromium');
 const puppeteer = require('puppeteer-core');
-const { Configuration, OpenAIApi } = require('openai');
+const OpenAI = require('openai'); // заменено!
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY }); // заменено!
 
 function generateSubscriptionsTable(subsText) {
   const lines = subsText.split(',').map(s => s.trim());
@@ -18,7 +15,7 @@ function generateSubscriptionsTable(subsText) {
 }
 
 function generateHtmlReport({ name, email, subscriptions }, aiText) {
-  const templatePath = path.join(process.cwd(), 'report_template.html'); // обновлено!
+  const templatePath = path.join(process.cwd(), 'report_template.html');
   const template = fs.readFileSync(templatePath, 'utf8');
 
   return template
@@ -46,13 +43,13 @@ ${subsText}
 Keep it under 300 words. Clear and professional tone.
   `;
 
-  const response = await openai.createChatCompletion({
+  const response = await openai.chat.completions.create({
     model: "gpt-4",
     messages: [{ role: "user", content: prompt }],
     temperature: 0.7,
   });
 
-  return response.data.choices[0].message.content;
+  return response.choices[0].message.content;
 }
 
 module.exports = async (req, res) => {
