@@ -1,5 +1,6 @@
 const fs = require('fs');
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
+const chromium = require('@sparticuz/chromium');
 const { Configuration, OpenAIApi } = require('openai');
 
 const configuration = new Configuration({ apiKey: process.env.OPENAI_API_KEY });
@@ -53,9 +54,14 @@ function generateHtmlReport({ name, email, subscriptions }, aiText) {
 }
 
 async function generatePdf(htmlContent, outputPath) {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    args: chromium.args,
+    executablePath: await chromium.executablePath(),
+    headless: chromium.headless,
+  });
+
   const page = await browser.newPage();
-  await page.setContent(htmlContent);
+  await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
   await page.pdf({ path: outputPath, format: 'A4' });
   await browser.close();
 }
