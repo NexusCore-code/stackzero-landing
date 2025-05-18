@@ -1,5 +1,3 @@
-// FINAL FIXED VERSION FOR VERCEL (No fs, HTML inline)
-
 const puppeteer = require('puppeteer-core');
 const chromium = require('@sparticuz/chromium');
 const OpenAI = require('openai');
