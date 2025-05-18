@@ -1,47 +1,25 @@
-<!--
-  StackZero by Elena Smirnova
-  Version: Final layout with client-side PDF generation
--->
-<!DOCTYPE html>
 
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>StackZero</title>
-<link href="favicon_sz.ico" rel="icon"/>
-<meta content="sz_preview.png" property="og:image"/>
-<style>
-    body { font-family: Arial, sans-serif; background: #000; color: #fff; margin: 0; padding: 0; }
-    nav {
-      background: #111;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 2rem;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    nav .logo { font-weight: bold; color: #fff; font-size: 1.2rem; }
-    nav .nav-links a {
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StackZero</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #000;
       color: #fff;
-      margin-left: 1.5rem;
-      text-decoration: none;
-      font-weight: bold;
+      margin: 0;
+      padding: 0;
     }
-    nav .nav-links a:hover {
-      text-decoration: underline;
-    }
-    h1 { text-align: center; margin-top: 3rem; font-size: 2.5rem; }
-    p.intro { text-align: center; font-size: 1.1rem; margin-bottom: 2rem; }
     .form-box {
       background: #fff;
       color: #000;
       padding: 2rem;
       border-radius: 12px;
       max-width: 500px;
-      margin: 2rem auto;
+      margin: 3rem auto;
       text-align: center;
     }
     input, textarea {
@@ -60,138 +38,83 @@
       border-radius: 8px;
       cursor: pointer;
     }
+    h1 {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 2.5rem;
+    }
+    .intro {
+      text-align: center;
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+    }
     #response {
       margin-top: 1rem;
       font-size: 0.95rem;
       color: green;
     }
-    section {
-      max-width: 800px;
-      margin: 4rem auto;
-      text-align: left;
-      padding: 0 1rem;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-      color: #fff;
-      font-size: 0.95rem;
-    }
-    th, td {
-      border: 1px solid #444;
-      padding: 0.5rem;
-      text-align: left;
-    }
-    th {
-      background-color: #111;
-    }
   </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
-<nav>
-<div class="logo">StackZero</div>
-<div class="nav-links">
-<a href="#about">About</a>
-<a href="#pricing">Pricing</a>
-<a href="#contact">Contact</a>
-</div>
-</nav>
-<h1>StackZero</h1>
-<p class="intro">AI analysis of your subscriptions in 1 minute</p>
-<div class="form-box">
-<form id="stackzero-form">
-<input name="name" placeholder="Your name" required="" type="text"/>
-<input name="email" placeholder="Your email" required="" type="email"/>
-<textarea name="subscriptions" placeholder="List your subscriptions..." required=""></textarea>
-<button type="submit">Get your free report</button>
-</form>
-<p id="response"></p>
-</div>
-<section id="about">
-<h2>What is StackZero?</h2>
-<p>StackZero is an AI-powered service that helps businesses and individuals analyze and optimize their SaaS (Software-as-a-Service) expenses.</p>
-<ul>
-<li>Unused or forgotten subscriptions</li>
-<li>Duplicate services across teams</li>
-<li>Overpriced tools you could replace or downscale</li>
-</ul>
-<p>You get a clean, personalized PDF report — perfect to share with finance, operations, or your team.</p>
-</section>
-<section id="pricing">
-<h2>Free vs Paid Report</h2>
-<table>
-<thead>
-<tr>
-<th>Feature</th>
-<th>Free Report</th>
-<th>Paid Report</th>
-</tr>
-</thead>
-<tbody>
-<tr><td>Manual entry of subscriptions</td><td>Yes</td><td>Optional</td></tr>
-<tr><td>Gmail integration</td><td>No</td><td>Yes</td></tr>
-<tr><td>AI-powered expense analysis</td><td>Basic</td><td>Full with recommendations</td></tr>
-<tr><td>Downloadable PDF report</td><td>Yes</td><td>Yes</td></tr>
-<tr><td>History &amp; trend analysis</td><td>No</td><td>Yes</td></tr>
-<tr><td>Personalized recommendations</td><td>No</td><td>Yes</td></tr>
-</tbody>
-</table>
-</section>
-<section id="contact">
-<h2>Why StackZero?</h2>
-<ul>
-<li><strong>Real value, instantly:</strong> AI-generated reports you can use or forward in minutes</li>
-<li><strong>Not just Gmail:</strong> Manual input, automation, and integrations that scale</li>
-<li><strong>Trust by design:</strong> Transparent, secure, and optimized for privacy</li>
-<li><strong>B2B-ready:</strong> Agencies, startups and growing teams use our white-label engine</li>
-<li><strong>Fast feedback loop:</strong> Built to evolve from your real use and input</li>
-</ul>
-</section>
-<script src="script.js?v=2.0"></script>
-<!-- Modal for Report Generation -->
-<div id="report-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; align-items:center; justify-content:center; flex-direction:column; color:#fff; text-align:center;">
-<div style="padding:2rem; max-width:600px; width:90%; background:#111; border-radius:12px; box-shadow:0 0 20px #000;">
-<h2>Generating your report...</h2>
-<div id="progress-bar-container" style="width:100%; background:#333; border-radius:8px; overflow:hidden; margin:20px 0;">
-<div id="progress-bar" style="width:0%; height:20px; background:#2d4de0; transition:width 0.5s;"></div>
-</div>
-<div id="report-preview" style="display:none;">
-<iframe id="pdf-frame" style="width:100%; height:500px; border:none;"></iframe>
-<a download="StackZero_Report.pdf" href="#" id="download-link" style="margin-top:1rem; display:inline-block; background:#2d4de0; padding:0.5rem 1.5rem; border-radius:8px; color:#fff; text-decoration:none;">Download Full Report</a>
-</div>
-</div>
-</div>
-<!-- Hidden PDF template -->
-<div id="pdf-content" style="display: none; background: #fff; color: #000; padding: 2rem; max-width: 800px; margin: auto;">
-<h1 style="text-align: center; color: #2d4de0;">StackZero AI Report</h1>
-<div id="pdf-text" style="white-space: pre-wrap;"></div>
-<footer style="margin-top: 3rem; text-align: center; font-size: 0.9rem; color: #666;">Generated by StackZero.ai</footer>
-</div>
+  <h1>StackZero</h1>
+  <p class="intro">AI-powered report for your SaaS subscriptions</p>
+  <div class="form-box">
+    <form id="stackzero-form">
+      <input name="name" placeholder="Your name" required type="text" />
+      <input name="email" placeholder="Your email" required type="email" />
+      <textarea name="subscriptions" placeholder="List your subscriptions..." required></textarea>
+      <button type="submit">Get your report</button>
+    </form>
+    <p id="response"></p>
+  </div>
 
-<section id="pricing-plans" style="max-width: 800px; margin: 4rem auto; padding: 0 1rem;">
-<h2 style="font-size: 2rem; margin-bottom: 1.5rem;">Plans &amp; Pricing</h2>
-<div style="display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: space-between;">
-<div style="flex: 1 1 250px; background: #fff; color: #000; border-radius: 12px; padding: 1.5rem;">
-<h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">One-Time Report</h3>
-<p style="font-size: 1.5rem; font-weight: bold; margin: 0.5rem 0;">$9</p>
-<p style="font-size: 0.9rem; margin-bottom: 1rem;">Full PDF with AI-based recommendations</p>
-<a href="https://t.me/StackZeroBot" style="display: inline-block; background: #2d4de0; color: #fff; padding: 0.5rem 1.2rem; border-radius: 8px; text-decoration: none;" target="_blank">Get Report</a>
-</div>
-<div style="flex: 1 1 250px; background: #dbeafe; color: #000; border-radius: 12px; padding: 1.5rem;">
-<h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">PRO Subscription</h3>
-<p style="font-size: 1.5rem; font-weight: bold; margin: 0.5rem 0;">$12/mo or $99/year</p>
-<p style="font-size: 0.9rem; margin-bottom: 1rem;">AI-powered insights, history tracking, monthly updates</p>
-<a href="https://t.me/StackZeroBot?start=pro" style="display: inline-block; background: #2d4de0; color: #fff; padding: 0.5rem 1.2rem; border-radius: 8px; text-decoration: none;" target="_blank">Subscribe</a>
-</div>
-<div style="flex: 1 1 250px; background: #1f2937; color: #fff; border-radius: 12px; padding: 1.5rem;">
-<h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">White Label</h3>
-<p style="font-size: 1.5rem; font-weight: bold; margin: 0.5rem 0;">$199/mo</p>
-<p style="font-size: 0.9rem; margin-bottom: 1rem;">Agency-ready: branded reports, client dashboard, reseller support</p>
-<a href="mailto:contact@stackzero.ai" style="display: inline-block; background: #fff; color: #000; padding: 0.5rem 1.2rem; border-radius: 8px; text-decoration: none;">Contact Us</a>
-</div>
-</div>
-</section>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("stackzero-form");
+
+      if (!form) {
+        console.error("Form not found");
+        return;
+      }
+
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const data = {
+          name: form.name.value.trim(),
+          email: form.email.value.trim(),
+          subscriptions: form.subscriptions.value.trim()
+        };
+
+        const responseEl = document.getElementById("response");
+
+        try {
+          responseEl.innerText = "Generating your report...";
+
+          const query = await fetch("https://stackzero-report.onrender.com/submit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+          });
+
+          if (!query.ok) {
+            responseEl.innerText = "Something went wrong. Please try again.";
+            return;
+          }
+
+          const blob = await query.blob();
+          const pdfUrl = URL.createObjectURL(blob);
+
+          window.open(pdfUrl, "_blank");
+
+          responseEl.innerText = "Your report is ready.";
+          form.reset();
+        } catch (error) {
+          console.error("Submission failed", error);
+          responseEl.innerText = "Unexpected error. Please try again later.";
+        }
+      });
+    });
+  </script>
 </body>
 </html>
