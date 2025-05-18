@@ -1,7 +1,5 @@
-// FINAL FIXED VERSION FOR VERCEL (CommonJS + Puppeteer Core + Chromium)
+// FINAL FIXED VERSION FOR VERCEL (No fs, HTML inline)
 
-const fs = require('fs');
-const path = require('path');
 const puppeteer = require('puppeteer-core');
 const chromium = require('@sparticuz/chromium');
 const OpenAI = require('openai');
@@ -17,16 +15,47 @@ function generateSubscriptionsTable(subsText) {
 }
 
 function generateHtmlReport({ name, email, subscriptions }, aiText) {
-  const templatePath = path.join(process.cwd(), 'report_template.html');
-  const template = fs.readFileSync(templatePath, 'utf8');
+  const htmlTemplate = `
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>StackZero Report</title>
+    <style>
+      body { font-family: 'Arial', sans-serif; margin: 40px; }
+      h1 { text-align: center; color: #007AFF; font-size: 22px; margin-bottom: 10px; }
+      h2 { margin-top: 30px; font-size: 16px; }
+      p, li { font-size: 13px; line-height: 1.5; }
+      table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 12px; }
+      th, td { border: 1px solid #ccc; padding: 8px; text-align: left; vertical-align: top; }
+      th { background: #f0f4ff; font-weight: 600; }
+      .footer { text-align: center; margin-top: 40px; font-size: 13px; color: #007AFF; }
+    </style>
+  </head>
+  <body>
+    <h1>StackZero</h1>
+    <p style="text-align: center; font-size: 14px;">Custom SaaS Report for <strong>${name}</strong></p>
+    <p><strong>Email:</strong> ${email}</p>
+    <h2>1. Your Subscriptions</h2>
+    <table>
+      <tr><th>Service</th><th>Price</th><th>Period</th><th>Note</th></tr>
+      ${generateSubscriptionsTable(subscriptions)}
+    </table>
+    <h2>2. AI Analysis</h2>
+    <p>${aiText.replace(/\n/g, '<br>')}</p>
+    <h2>3. Recommendations</h2>
+    <ul>
+      ${aiText.split('\n').slice(-4).map(l => `<li>${l}</li>`).join('\n')}
+    </ul>
+    <div class="footer">
+      Thank you for using StackZero<br />
+      <a href="https://stackzero.ai/feedback">Leave feedback or suggestion →</a>
+    </div>
+  </body>
+  </html>
+  `;
 
-  return template
-    .replace('{{user_name}}', name)
-    .replace('{{report_date}}', new Date().toLocaleDateString())
-    .replace('{{subscription_count}}', subscriptions.split(',').length)
-    .replace('{{subscriptions_table}}', generateSubscriptionsTable(subscriptions))
-    .replace('{{ai_analysis}}', aiText)
-    .replace('{{recommendations_list}}', aiText.split('\n').slice(-4).map(l => `<li>${l}</li>`).join('\n'));
+  return htmlTemplate;
 }
 
 async function getAiAnalysis(subsText) {
