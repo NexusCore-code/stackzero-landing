@@ -16,59 +16,32 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     const responseEl = document.getElementById("response");
-    const modal = document.getElementById("report-modal");
-    const progressBar = document.getElementById("progress-bar");
-    const preview = document.getElementById("report-preview");
-    const pdfFrame = document.getElementById("pdf-frame");
-    const downloadLink = document.getElementById("download-link");
 
     try {
-      // 1. Показ модалки и анимация загрузки
-      modal.style.display = "flex";
-      preview.style.display = "none";
-      progressBar.style.width = "0%";
+      responseEl.innerText = "Generating your report...";
 
-      let progress = 0;
-      const interval = setInterval(() => {
-        if (progress < 95) {
-          progress += Math.random() * 5;
-          progressBar.style.width = `${Math.min(progress, 95)}%`;
-        }
-      }, 300);
-
-      // 2. Отправка запроса на /api/submit
-      const res = await fetch("/api/submit", {
+      const query = await fetch("https://stackzero-report.onrender.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
       });
 
-      if (!res.ok) {
-        clearInterval(interval);
-        modal.style.display = "none";
+      if (!query.ok) {
         responseEl.innerText = "Something went wrong. Please try again.";
         return;
       }
 
-      // 3. Обработка PDF-ответа
-      const blob = await res.blob();
+      const blob = await query.blob();
       const pdfUrl = URL.createObjectURL(blob);
 
-      clearInterval(interval);
-      progressBar.style.width = "100%";
+      // Открыть PDF в новом окне
+      window.open(pdfUrl, "_blank");
 
-      setTimeout(() => {
-        preview.style.display = "block";
-        pdfFrame.src = pdfUrl;
-        downloadLink.href = pdfUrl;
-      }, 800);
-
-      responseEl.innerText = "Thank you! Your report is ready.";
+      responseEl.innerText = "Your report is ready.";
       form.reset();
     } catch (error) {
       console.error("Submission failed", error);
-      modal.style.display = "none";
-      responseEl.innerText = "An unexpected error occurred. Please try again later.";
+      responseEl.innerText = "Unexpected error. Please try again later.";
     }
   });
 });
