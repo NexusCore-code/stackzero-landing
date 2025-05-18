@@ -34,7 +34,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const blob = await query.blob();
       const pdfUrl = URL.createObjectURL(blob);
 
-      // Открыть PDF в новом окне
       window.open(pdfUrl, "_blank");
 
       responseEl.innerText = "Your report is ready.";
